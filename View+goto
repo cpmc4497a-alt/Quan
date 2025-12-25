@@ -1,0 +1,117 @@
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local LocalPlayer = Players.LocalPlayer
+local Camera = workspace.CurrentCamera
+
+-- GUI MINI
+local gui = Instance.new("ScreenGui", game.CoreGui)
+gui.Name = "MiniViewGoto"
+
+local main = Instance.new("Frame", gui)
+main.Size = UDim2.new(0, 220, 0, 260)
+main.Position = UDim2.new(0, 10, 0.3, 0)
+main.BackgroundColor3 = Color3.fromRGB(20,20,20)
+main.Active = true
+main.Draggable = true
+
+local title = Instance.new("TextLabel", main)
+title.Size = UDim2.new(1,0,0,25)
+title.Text = "VIEW / GOTO"
+title.TextColor3 = Color3.new(1,1,1)
+title.BackgroundTransparency = 1
+title.TextScaled = true
+
+local stop = Instance.new("TextButton", main)
+stop.Size = UDim2.new(1,-10,0,25)
+stop.Position = UDim2.new(0,5,0,30)
+stop.Text = "STOP VIEW"
+stop.BackgroundColor3 = Color3.fromRGB(150,60,60)
+stop.TextColor3 = Color3.new(1,1,1)
+stop.TextScaled = true
+
+local list = Instance.new("ScrollingFrame", main)
+list.Position = UDim2.new(0,0,0,60)
+list.Size = UDim2.new(1,0,1,-60)
+list.CanvasSize = UDim2.new(0,0,0,0)
+list.ScrollBarImageTransparency = 0
+
+local layout = Instance.new("UIListLayout", list)
+layout.Padding = UDim.new(0,4)
+
+stop.MouseButton1Click:Connect(function()
+    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+        Camera.CameraSubject = LocalPlayer.Character.Humanoid
+    end
+end)
+
+-- Safe GoTo function
+local function safeGoto(target)
+    local char = LocalPlayer.Character
+    if not (char and target.Character) then return end
+
+    local hrp = char:FindFirstChild("HumanoidRootPart")
+    local thrp = target.Character:FindFirstChild("HumanoidRootPart")
+    if not (hrp and thrp) then return end
+
+    hrp.Velocity = Vector3.zero
+
+    local goal = {}
+    goal.CFrame = thrp.CFrame * CFrame.new(0,0,-4)
+
+    local tween = TweenService:Create(
+        hrp,
+        TweenInfo.new(0.25, Enum.EasingStyle.Linear),
+        goal
+    )
+    tween:Play()
+end
+
+local function refresh()
+    list:ClearAllChildren()
+    layout.Parent = list
+
+    for _,plr in ipairs(Players:GetPlayers()) do
+        if plr ~= LocalPlayer then
+            local item = Instance.new("Frame", list)
+            item.Size = UDim2.new(1,-8,0,48)
+            item.BackgroundColor3 = Color3.fromRGB(35,35,35)
+
+            local name = Instance.new("TextLabel", item)
+            name.Size = UDim2.new(1,0,0,20)
+            name.Text = plr.Name
+            name.TextColor3 = Color3.new(1,1,1)
+            name.BackgroundTransparency = 1
+            name.TextScaled = true
+
+            local view = Instance.new("TextButton", item)
+            view.Size = UDim2.new(0.48,0,0,22)
+            view.Position = UDim2.new(0.01,0,0.52,0)
+            view.Text = "VIEW"
+            view.TextScaled = true
+            view.BackgroundColor3 = Color3.fromRGB(70,120,200)
+            view.TextColor3 = Color3.new(1,1,1)
+
+            local gotoBtn = Instance.new("TextButton", item)
+            gotoBtn.Size = UDim2.new(0.48,0,0,22)
+            gotoBtn.Position = UDim2.new(0.51,0,0.52,0)
+            gotoBtn.Text = "GOTO"
+            gotoBtn.TextScaled = true
+            gotoBtn.BackgroundColor3 = Color3.fromRGB(70,200,120)
+            gotoBtn.TextColor3 = Color3.new(1,1,1)
+
+            view.MouseButton1Click:Connect(function()
+                if plr.Character and plr.Character:FindFirstChild("Humanoid") then
+                    Camera.CameraSubject = plr.Character.Humanoid
+                end
+            end)
+
+            gotoBtn.MouseButton1Click:Connect(function()
+                safeGoto(plr)
+            end)
+        end
+    end
+end
+
+refresh()
+Players.PlayerAdded:Connect(refresh)
+Players.PlayerRemoving:Connect(refresh)
