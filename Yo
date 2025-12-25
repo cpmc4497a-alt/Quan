@@ -1,0 +1,93 @@
+-- ===== PORTAL PRO FULL | DELTA MOBILE | THÁP TÁT X =====
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local VirtualUser = game:GetService("VirtualUser")
+
+local plr = Players.LocalPlayer
+local char = plr.Character or plr.CharacterAdded:Wait()
+local hrp = char:WaitForChild("HumanoidRootPart")
+
+-- ===== ANTI AFK =====
+plr.Idled:Connect(function()
+    VirtualUser:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+    task.wait(1)
+    VirtualUser:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+end)
+
+-- ===== GUI =====
+local gui = Instance.new("ScreenGui", plr.PlayerGui)
+gui.Name = "PortalGUI"
+
+local function mkBtn(txt, y)
+    local b = Instance.new("TextButton", gui)
+    b.Size = UDim2.new(0,150,0,45)
+    b.Position = UDim2.new(0.02,0,y,0)
+    b.Text = txt
+    b.TextScaled = true
+    b.BackgroundColor3 = Color3.fromRGB(30,30,30)
+    b.TextColor3 = Color3.fromRGB(0,200,255)
+    b.BorderSizePixel = 0
+    b.AutoButtonColor = true
+    return b
+end
+
+local btnA = mkBtn("Set Portal A", 0.35)
+local btnB = mkBtn("Set Portal B", 0.42)
+local btnDel = mkBtn("Xóa Portal", 0.49)
+
+-- ===== PORTAL =====
+local portalA, portalB
+local active = true
+local cd = false
+
+local function createPortal(pos, color)
+    local p = Instance.new("Part")
+    p.Size = Vector3.new(6,8,1)
+    p.Anchored = true
+    p.CanCollide = false
+    p.Material = Enum.Material.Neon
+    p.Color = color
+    p.CFrame = CFrame.new(pos)
+    p.Parent = workspace
+
+    task.spawn(function()
+        while p and p.Parent do
+            p.CFrame = p.CFrame * CFrame.Angles(0, math.rad(2), 0)
+            task.wait()
+        end
+    end)
+
+    return p
+end
+
+btnA.MouseButton1Click:Connect(function()
+    if portalA then portalA:Destroy() end
+    portalA = createPortal(hrp.Position, Color3.fromRGB(0,170,255))
+end)
+
+btnB.MouseButton1Click:Connect(function()
+    if portalB then portalB:Destroy() end
+    portalB = createPortal(hrp.Position, Color3.fromRGB(255,120,0))
+end)
+
+btnDel.MouseButton1Click:Connect(function()
+    if portalA then portalA:Destroy() portalA=nil end
+    if portalB then portalB:Destroy() portalB=nil end
+end)
+
+-- ===== TELEPORT LOGIC (FIX GAME CHẶN TOUCHED) =====
+RunService.Heartbeat:Connect(function()
+    if not active or cd or not portalA or not portalB then return end
+
+    if (hrp.Position - portalA.Position).Magnitude < 4 then
+        cd = true
+        hrp.CFrame = portalB.CFrame * CFrame.new(0,0,-4)
+        task.wait(0.6)
+        cd = false
+    elseif (hrp.Position - portalB.Position).Magnitude < 4 then
+        cd = true
+        hrp.CFrame = portalA.CFrame * CFrame.new(0,0,-4)
+        task.wait(0.6)
+        cd = false
+    end
+end)
