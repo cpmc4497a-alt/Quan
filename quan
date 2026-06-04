@@ -1,0 +1,11 @@
+-- Delta Executor: Silent Execute
+-- Trạng thái: Chạy ngầm hoàn toàn, không hiển thị, không icon
+
+local function silentExecute()
+    -- Script thực thi im lặng ở đây
+    local success, err = pcall(function()
+        -- Không có lệnh hiển thị nào được đặt ở đây
+    end)
+end
+
+silentExecute()
