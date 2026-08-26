@@ -1,0 +1,71 @@
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+local Camera = workspace.CurrentCamera
+
+local function createESP(player)
+    if player == LocalPlayer then return end
+
+    -- Tạo khung hình chữ nhật 2D (Màu trắng)
+    local box = Drawing.new("Square")
+    box.Color = Color3.fromRGB(255, 255, 255)
+    box.Thickness = 1.5
+    box.Filled = false
+    box.Visible = false
+
+    -- Tạo Text hiển thị tên (Màu trắng)
+    local nameTag = Drawing.new("Text")
+    nameTag.Color = Color3.fromRGB(255, 255, 255)
+    nameTag.Size = 14
+    nameTag.Center = true
+    nameTag.Outline = true
+    nameTag.OutlineColor = Color3.fromRGB(0, 0, 0)
+    nameTag.Visible = false
+
+    local connection
+    connection = RunService.RenderStepped:Connect(function()
+        if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character:FindFirstChildOfClass("Humanoid") and player.Character.Humanoid.Health > 0 then
+            local hrp = player.Character.HumanoidRootPart
+            local pos, onScreen = Camera:WorldToViewportPoint(hrp.Position)
+
+            if onScreen then
+                -- Tính toán kích thước khung theo khoảng cách
+                local head = player.Character:FindFirstChild("Head")
+                local headPos = head and Camera:WorldToViewportPoint(head.Position + Vector3.new(0, 0.5, 0)) or Camera:WorldToViewportPoint(hrp.Position + Vector3.new(0, 3, 0))
+                local legPos = Camera:WorldToViewportPoint(hrp.Position - Vector3.new(0, 3.5, 0))
+
+                local height = math.abs(headPos.Y - legPos.Y)
+                local width = height / 1.6
+
+                -- Cập nhật vị trí khung 2D
+                box.Size = Vector2.new(width, height)
+                box.Position = Vector2.new(pos.X - width / 2, pos.Y - height / 2)
+                box.Visible = true
+
+                -- Chỉ hiển thị DisplayName (Tên hiển thị) ở phía trên khung
+                nameTag.Text = player.DisplayName
+                nameTag.Position = Vector2.new(pos.X, pos.Y - height / 2 - 16)
+                nameTag.Visible = true
+            else
+                box.Visible = false
+                nameTag.Visible = false
+            end
+        else
+            box.Visible = false
+            nameTag.Visible = false
+            if not player or not player.Parent then
+                box:Remove()
+                nameTag:Remove()
+                connection:Disconnect()
+            end
+        end
+    end)
+end
+
+-- Bật ESP cho người chơi hiện tại
+for _, player in ipairs(Players:GetPlayers()) do
+    createESP(player)
+end
+
+-- Bật ESP khi có người chơi mới vào server
+Players.PlayerAdded:Connect(createESP)
