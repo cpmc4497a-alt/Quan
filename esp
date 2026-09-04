@@ -1,71 +1,11 @@
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local LocalPlayer = Players.LocalPlayer
-local Camera = workspace.CurrentCamera
-
-local function createESP(player)
-    if player == LocalPlayer then return end
-
-    -- Tạo khung hình chữ nhật 2D (Màu trắng)
-    local box = Drawing.new("Square")
-    box.Color = Color3.fromRGB(255, 255, 255)
-    box.Thickness = 1.5
-    box.Filled = false
-    box.Visible = false
-
-    -- Tạo Text hiển thị tên (Màu trắng)
-    local nameTag = Drawing.new("Text")
-    nameTag.Color = Color3.fromRGB(255, 255, 255)
-    nameTag.Size = 14
-    nameTag.Center = true
-    nameTag.Outline = true
-    nameTag.OutlineColor = Color3.fromRGB(0, 0, 0)
-    nameTag.Visible = false
-
-    local connection
-    connection = RunService.RenderStepped:Connect(function()
-        if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character:FindFirstChildOfClass("Humanoid") and player.Character.Humanoid.Health > 0 then
-            local hrp = player.Character.HumanoidRootPart
-            local pos, onScreen = Camera:WorldToViewportPoint(hrp.Position)
-
-            if onScreen then
-                -- Tính toán kích thước khung theo khoảng cách
-                local head = player.Character:FindFirstChild("Head")
-                local headPos = head and Camera:WorldToViewportPoint(head.Position + Vector3.new(0, 0.5, 0)) or Camera:WorldToViewportPoint(hrp.Position + Vector3.new(0, 3, 0))
-                local legPos = Camera:WorldToViewportPoint(hrp.Position - Vector3.new(0, 3.5, 0))
-
-                local height = math.abs(headPos.Y - legPos.Y)
-                local width = height / 1.6
-
-                -- Cập nhật vị trí khung 2D
-                box.Size = Vector2.new(width, height)
-                box.Position = Vector2.new(pos.X - width / 2, pos.Y - height / 2)
-                box.Visible = true
-
-                -- Chỉ hiển thị DisplayName (Tên hiển thị) ở phía trên khung
-                nameTag.Text = player.DisplayName
-                nameTag.Position = Vector2.new(pos.X, pos.Y - height / 2 - 16)
-                nameTag.Visible = true
-            else
-                box.Visible = false
-                nameTag.Visible = false
-            end
-        else
-            box.Visible = false
-            nameTag.Visible = false
-            if not player or not player.Parent then
-                box:Remove()
-                nameTag:Remove()
-                connection:Disconnect()
-            end
-        end
-    end)
-end
-
--- Bật ESP cho người chơi hiện tại
-for _, player in ipairs(Players:GetPlayers()) do
-    createESP(player)
-end
-
--- Bật ESP khi có người chơi mới vào server
-Players.PlayerAdded:Connect(createESP)
+--[[
+================================================
+                 L U A U F O R G E
+================================================
+   Premium Lua/Luau VM Obfuscation
+   https://luauforge-obf.netlify.app
+   Features: VM | CF | Mutate | SuperOp
+             Encrypt | AntiDump | Integrity
+================================================
+]]
+local I=string.byte;local s=string.char;local n=string.sub;local G=table.concat;local E=math.ldexp;local F=getfenv or function()return _ENV end;local e=setmetatable;local L=select;local h=unpack;local i=tonumber;local function r(d)local l,o,a="","",{}local t=256;local c={}for e=0,t-1 do c[e]=s(e)end;local e=1;local function f()local l=i(n(d,e,e),36)e=e+1;local n=i(n(d,e,e+l-1),36)e=e+l;return n end;l=s(f())a[1]=l;while e<#d do local e=f()if c[e]then o=c[e]else o=l..n(l,1,1)end;c[t]=l..n(o,1,1)a[#a+1],l,t=o,o,t+1 end;return table.concat(a)end;local r=r('22A22K22A27622922G27622A21Q21P21F21I1X2121W21N21O21H22922E27A21H21F21R21J22922D27A1Q2122121Y1L21J2122291Q27A21325821W21L25T22T1I22626225P24X24C22L2661U1G23Q23725F26Y25N272131B25Q22S22323724F25C22B25E26F26H23722626H24C23L25025U25T21925625P23521122R25K2341W2151D21G25U21U25M1M1Q25322E1026622X21N25T1024C1C25X23T24D22927A22A22922C27A27G27I27K2292A62761X21321C27M27A21D21M21F1W22B2A72A72AR2A724Y21P1I2AU2A724I2312291O27A22725K21C22124I22N21P22P24O24S25I24Y21M25322Y23C26R1H25223T24U23W22O22S24G1G21A1T26J26M21C24T23U25I1G21Q23O27325123K26J26E22424724S1T2292242491521T21Z1Y21Y25321025521L23625U21J22S24T21Y22E24W22X26Q1Z24026Y26L25221X2AZ27625U102AY2AS2761I2A721M27A26922I24I24T24I22I27626D21U2DL25621U27626C22I22Q22A2562DO22A26P2362DS23627626W2E62DZ2E926X22Q2DS2DY22A26W2EF2562EF2EH2DU2EJ27625D23E2DS23E27625H2ED24T2EN22A25G1Q1Y22A25728422A25L2EV23O2EF25K1225U2DZ1227625O27A25627A25T1Q2DS2F425X122DS2FE22A2611A2DS1A2D92E42EW2E625U24G2FR23R2FR24K21627623R2G722A24G21U2E623T2DU22A25O2G722B2412GA25O25U24I22A2412FC22A25U24A24T24T2522GV21925T21E2DL24T21E27625X2FU2GW2FW22A2602EF2592EF2652H824T2HA25Y22I24G2C122I22825U24K25U26A22A2492GS24K26223M22A2422622762HX2HT2562I222A24O2DF2DZ2IA24S22Y2762562IE22A24W2F42562F42502EI2EF2542GS2562GS2582IR2GS24W2362E62562E924W1A2AY2562HA2502F423R2F42542H522A24B2JC2582I72I627623K2JH2I72502IY2EA2762501A1222B2J527625826Q2IF2JY22A23K26Y2IF2K322A25926I2DS26I2JW2KA2DZ2KC25826I2EM2KC23P2HH2HA23T2FL2GW2F425J22I1Y22B23W2DO2HS27A2402D926A2GO24T2402FC25U2KQ25U2KT2KV2HT2762KY2GT26A21M2DL2402DH25U23W26I24Y22A2452KC2402422LM24524227623Z22I24222B24E2L92KX2KZ22A2LG2D923S23M25E22B2432HZ22A24426I26A22B24R2KC2442562LM23N2FI22A2482422LY2562LU2MP24I2LM2562GP22A23O24A2MX24A2JJ2MZ2MY2JW2MO2562MO26A1A2GW2J524T21925B22I2L723K2M12LB2M32M52GT2582MU23R2MU2KQ2KS2KU2LD2M22LD1I2LG2DF2LJ2LL2LN2KC2KQ2MG23L2M12NP25U2M72M92MB2LB2MF2MH2LP24Y2LM2502LM2N02N222A24S2N422A2582OO23R2OO26A25M2GW2402P021924S2MC23R2MC24W23U2G82PA2HB27A2K522A26A24Q22L22A24024Q2NG24S1A22Q22B2532HA25C25E2PQ23Z25E27625Y24Y24V2GX2Q121926K2IA23R2IA26O2J82F426O2PE27A2PH2PJ2PL2NG26C22227623Y2QL22A26822A2IZ27A26822I2DU24A2E12QU27623Q2E1');local i=bit and bit.bxor or function(e,l)local n,o=1,0 while e>0 and l>0 do local c,t=e%2,l%2 if c~=t then o=o+n end e,l,n=(e-c)/2,(l-t)/2,n*2 end if e<l then e=l end while e>0 do local l=e%2 if l>0 then o=o+n end e,n=(e-l)/2,n*2 end return o end local function e(n,e,l)if l then local e=(n/2^(e-1))%2^((l-1)-(e-1)+1);return e-e%1;else local e=2^(e-1);return(n%(e+e)>=e)and 1 or 0;end;end;local d=1;local function f()local n,o,e,l=I(r,d,d+3);n=i(n,82)o=i(o,82)e=i(e,82)l=i(l,82)d=d+4;return(l*16777216)+(e*65536)+(o*256)+n;end;local function u()local e=i(I(r,d,d),82);d=d+1;return e;end;local function D()local l=f();local n=f();local t=1;local o=(e(n,1,20)*(2^32))+l;local l=e(n,21,31);local e=((-1)^e(n,32));if(l==0)then if(o==0)then return e*0;else l=1;t=0;end;elseif(l==2047)then return(o==0)and(e*(1/0))or(e*(0/0));end;return E(e,l-1023)*(t+(o/(2^52)));end;local M=f;local function E(e)local l;if(not e)then e=M();if(e==0)then return'';end;end;l=n(r,d,d+e-1);d=d+e;local o={}for e=1,#l do o[e]=s(i(I(n(l,e,e)),82))end return G(o);end;local K=f;local function U(...)return{...},L('#',...)end local function I()local a={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};local o={};local l={};local l={a,nil,o,nil,l};l[4]=u();local c=f()local n={0,0,0,0,0,0,0,0,0,0,0,0,0,0};for o=1,c do local l=u();local e;if(l==2)then e=(u()~=0);elseif(l==1)then e=D();elseif(l==3)then e=E();end;n[o]=e;end;l[2]=n for e=1,f()do o[e-1]=I();end;for c=1,f()do local n=i(f(),178);local o=i(f(),232);local t=e(n,1,2);local l=e(o,1,11);local l={l,e(n,3,11),nil,nil,o};if(t==0)then l[3]=e(n,12,20);l[5]=e(n,21,29);elseif(t==1)then l[3]=e(o,12,33);elseif(t==2)then l[3]=e(o,12,32)-1048575;elseif(t==3)then l[3]=e(o,12,32)-1048575;l[5]=e(n,21,29);end;a[c]=l;end;do local e=0 local n=l[1]if type(n)=='table'then for l=1,#n do local l=n[l]if type(l)=='table'then e=(e+(l[1]or 0)*131+(l[2]or 0))%2147483647 end end end local n=tonumber(c)or 0 e=(e+n*17+(l[4]or 0)*13)%2147483647 local n=l[3]if type(n)=='table'then local l=0 while type(n[l])=='table'do e=(e+(n[l][6]or 0)*19)%2147483647 l=l+1 end end l[6]=e end;return l;end;local function G(d,e,f)local n=d[1];local l=d[2];local e=d[3];local o=d[4];return function(...)local t=n;local c=l;local e=e;local o=o;local s=U local n=1;local a=-1;local u={};local r={...};local i=L('#',...)-1;local e={};local l={};for e=0,i do if(e>=o)then u[e-o]=r[e+1];else l[e]=r[e+1];end;end;local e=i-o+1 local e;local o;if type(t)~='table'or type(d)~='table'then return end while true do e=t[n];o=e[1];_ibc=(_ibc or 0)+1 if _ibc>=96 then _ibc=0 if type(e)~='table'or type(o)~='number'or type(t)~='table'then return end end if o<=31 then if o<=15 then if o<=7 then if o<=3 then if o<=1 then if o==0 then local o=e[2];local t={};local n=0;local c=a;for e=o+1,c do n=n+1;t[n]=l[e];end;local t={l[o](h(t,1,c-o))};local e=o+e[5]-2;n=0;for e=o,e do n=n+1;l[e]=t[n];end;a=e;else l[e[2]]=l[e[3]][c[e[5]]];end;elseif o==2 then l[e[2]]=c[e[3]];else if(c[e[2]]>=l[e[5]])then n=n+1;else n=n+e[3];end;end;elseif o<=5 then if o==4 then l[e[2]]=l[e[3]][l[e[5]]];else l[e[2]]=#l[e[3]];end;elseif o>6 then l[e[2]]=#l[e[3]];else l[e[2]]=f[c[e[3]]];end;elseif o<=11 then if o<=9 then if o==8 then if(l[e[2]]==l[e[5]])then n=n+1;else n=n+e[3];end;else l[e[2]]=l[e[3]]+c[e[5]];end;elseif o==10 then l[e[2]]={};else if(l[e[2]]>=l[e[5]])then n=n+1;else n=n+e[3];end;end;elseif o<=13 then if o==12 then local o=e[2];local c=l[o+2];local t=l[o]+c;l[o]=t;if c>0 then if t<=l[o+1]then n=n+e[3];l[o+3]=t;end;elseif t>=l[o+1]then n=n+e[3];l[o+3]=t;end;else l[e[2]]=l[e[3]][l[e[5]]];end;elseif o==14 then l[e[2]]=l[e[3]]/c[e[5]];else l[e[2]]=l[e[3]]+c[e[5]];end;elseif o<=23 then if o<=19 then if o<=17 then if o>16 then l[e[2]]=l[e[3]]-l[e[5]];else l[e[2]]=l[e[3]][c[e[5]]];end;elseif o==18 then local o=e[2];local t={};local n=0;local c=a;for e=o+1,c do n=n+1;t[n]=l[e];end;local t={l[o](h(t,1,c-o))};local e=o+e[5]-2;n=0;for e=o,e do n=n+1;l[e]=t[n];end;a=e;else local o=e[3];local n=l[o]for e=o+1,e[5]do n=n..l[e];end;l[e[2]]=n;end;elseif o<=21 then if o>20 then local o=e[2];local t={};local n=0;local e=o+e[3]-1;for e=o+1,e do n=n+1;t[n]=l[e];end;local t,e=s(l[o](h(t,1,e-o)));e=e+o-1;n=0;for e=o,e do n=n+1;l[e]=t[n];end;a=e;else local o=e[2];local c=l[o+2];local t=l[o]+c;l[o]=t;if c>0 then if t<=l[o+1]then n=n+e[3];l[o+3]=t;end;elseif t>=l[o+1]then n=n+e[3];l[o+3]=t;end;end;elseif o==22 then l[e[2]]=l[e[3]]*c[e[5]];else l[e[2]]=c[e[3]];end;elseif o<=27 then if o<=25 then if o==24 then local o;local a;l[e[2]]=f[c[e[3]]];n=n+1;e=t[n];l[e[2]]=f[c[e[3]]];n=n+1;e=t[n];a=e[2];o=l[e[3]];l[a+1]=o;l[a]=o[c[e[5]]];n=n+1;e=t[n];l[e[2]]=c[e[3]];n=n+1;e=t[n];l[e[2]]=l[e[3]];n=n+1;e=t[n];l[e[2]]=l[e[3]];n=n+1;e=t[n];l[e[2]]=l[e[3]];n=n+1;e=t[n];l[e[2]]=l[e[3]];n=n+1;e=t[n];l[e[2]]=c[e[3]];n=n+1;e=t[n];l[e[2]]=f[c[e[3]]];else l[e[2]]=l[e[3]];end;elseif o>26 then l[e[2]]={};else a=e[2];end;elseif o<=29 then if o==28 then l[e[2]]=l[e[3]]%c[e[5]];else do return end;end;elseif o>30 then l[e[2]]=l[e[3]]+l[e[5]];else l[e[2]]();a=A;end;elseif o<=47 then if o<=39 then if o<=35 then if o<=33 then if o==32 then l[e[2]]();a=A;else local i;local d;local o;local f;local c;l[e[2]]=l[e[3]];n=n+1;e=t[n];l[e[2]]=l[e[3]];n=n+1;e=t[n];l[e[2]]=l[e[3]];n=n+1;e=t[n];c=e[2];f={};o=0;d=c+e[3]-1;for e=c+1,d do o=o+1;f[o]=l[e];end;i={l[c](h(f,1,d-c))};d=c+e[5]-2;o=0;for e=c,d do o=o+1;l[e]=i[o];end;a=d;n=n+1;e=t[n];l[e[2]]=l[e[3]][l[e[5]]];n=n+1;e=t[n];l[e[2]]=l[e[3]];n=n+1;e=t[n];l[e[2]]=l[e[3]];n=n+1;e=t[n];l[e[2]]=l[e[3]];n=n+1;e=t[n];l[e[2]]=l[e[3]];n=n+1;e=t[n];l[e[2]]=l[e[3]];end;elseif o>34 then l[e[2]]=l[e[3]]-c[e[5]];else l[e[2]]=f[c[e[3]]];end;elseif o<=37 then if o==36 then if(l[e[2]]==l[e[5]])then n=n+1;else n=n+e[3];end;else l[e[2]]=l[e[3]]-l[e[5]];end;elseif o==38 then l[e[2]][l[e[3]]]=l[e[5]];else local o=e[2];local n=l[e[3]];l[o+1]=n;l[o]=n[c[e[5]]];end;elseif o<=43 then if o<=41 then if o>40 then l[e[2]]=l[e[3]]+l[e[5]];else local r;local f;local o;local i;local d;l[e[2]]=l[e[3]]%c[e[5]];n=n+1;e=t[n];l[e[2]]=l[e[3]]+c[e[5]];n=n+1;e=t[n];l[e[2]]=l[e[3]];n=n+1;e=t[n];l[e[2]]=l[e[3]];n=n+1;e=t[n];l[e[2]]=l[e[3]];n=n+1;e=t[n];l[e[2]]=l[e[3]];n=n+1;e=t[n];l[e[2]]=l[e[3]];n=n+1;e=t[n];l[e[2]]=l[e[3]];n=n+1;e=t[n];d=e[2];i={};o=0;f=d+e[3]-1;for e=d+1,f do o=o+1;i[o]=l[e];end;r={l[d](h(i,1,f-d))};f=d+e[5]-2;o=0;for e=d,f do o=o+1;l[e]=r[o];end;a=f;n=n+1;e=t[n];l[e[2]]=l[e[3]][l[e[5]]];end;elseif o>42 then l[e[2]][l[e[3]]]=l[e[5]];else n=n+e[3];end;elseif o<=45 then if o==44 then local o=e[2];l[o]=l[o]-l[o+2];n=n+e[3];else local n=e[2];local o=l[e[3]];l[n+1]=o;l[n]=o[c[e[5]]];end;elseif o>46 then l[e[2]]=l[e[3]]%c[e[5]];else l[e[2]]=l[e[3]]/c[e[5]];end;elseif o<=55 then if o<=51 then if o<=49 then if o==48 then local o=e[2];l[o]=l[o]-l[o+2];n=n+e[3];else l[e[2]]=l[e[3]]-c[e[5]];end;elseif o==50 then n=n+e[3];else local o=e[2];local c={};local n=0;local t=o+e[3]-1;for e=o+1,t do n=n+1;c[n]=l[e];end;local t={l[o](h(c,1,t-o))};local e=o+e[5]-2;n=0;for e=o,e do n=n+1;l[e]=t[n];end;a=e;end;elseif o<=53 then if o>52 then local o=e[3];local n=l[o]for e=o+1,e[5]do n=n..l[e];end;l[e[2]]=n;else local o=e[2];local t={};local n=0;local e=o+e[3]-1;for e=o+1,e do n=n+1;t[n]=l[e];end;local t,e=s(l[o](h(t,1,e-o)));e=e+o-1;n=0;for e=o,e do n=n+1;l[e]=t[n];end;a=e;end;elseif o>54 then local o=e[2];local t={};local n=0;local c=o+e[3]-1;for e=o+1,c do n=n+1;t[n]=l[e];end;local t={l[o](h(t,1,c-o))};local e=o+e[5]-2;n=0;for e=o,e do n=n+1;l[e]=t[n];end;a=e;else if(c[e[2]]>=l[e[5]])then n=n+1;else n=n+e[3];end;end;elseif o<=59 then if o<=57 then if o==56 then l[e[2]]=l[e[3]]*c[e[5]];else l[e[2]]=l[e[3]]/c[e[5]];n=n+1;e=t[n];l[e[2]]=l[e[3]]-l[e[5]];n=n+1;e=t[n];l[e[2]]=l[e[3]]/c[e[5]];n=n+1;e=t[n];l[e[2]]=l[e[3]]*c[e[5]];n=n+1;e=t[n];l[e[2]]=l[e[3]];n=n+1;e=t[n];l[e[2]]=l[e[3]];n=n+1;e=t[n];n=n+e[3];end;elseif o==58 then if(l[e[2]]>=l[e[5]])then n=n+1;else n=n+e[3];end;else if(c[e[2]]<l[e[5]])then n=n+1;else n=n+e[3];end;end;elseif o<=61 then if o==60 then do return end;else l[e[2]]=l[e[3]];end;elseif o<=62 then local o;l[e[2]]=f[c[e[3]]];n=n+1;e=t[n];l[e[2]]=l[e[3]][c[e[5]]];n=n+1;e=t[n];l[e[2]]={};n=n+1;e=t[n];l[e[2]]=c[e[3]];n=n+1;e=t[n];l[e[2]]=c[e[3]];n=n+1;e=t[n];l[e[2]]=c[e[3]];n=n+1;e=t[n];o=e[2];l[o]=l[o]-l[o+2];n=n+e[3];elseif o==63 then if(c[e[2]]<l[e[5]])then n=n+1;else n=n+e[3];end;else a=e[2];end;n=n+1;end;end;end;do local l,e=pcall(I);if not l or type(e)~='table'then return end local l=e[6]or 0 if l~=i(1600844,1914755)then return end if type(r)=='string'then r=string.rep(s(0),math.min(#r,32))end r=nil d=nil f=function()return 0 end u=function()return 0 end E=function()return''end D=function()return 0 end M=f K=f return G(e,{},F())();end
