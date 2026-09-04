@@ -1,0 +1,1 @@
+loadstring(game:HttpGet("https://raw.githubusercontent.com/cpmc4497a-alt/Quan/refs/heads/main/Esp"))()
